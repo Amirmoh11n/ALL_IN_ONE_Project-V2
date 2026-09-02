@@ -1,0 +1,14 @@
+services:
+  brain-tumor-web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      MODEL_PATH: /app/artifacts/exports/brain_tumor_efficientnet_b3.onnx
+      MAX_UPLOAD_MB: "10"
+      CORS_ORIGINS: "*"
+    volumes:
+      - ../artifacts:/app/artifacts
+    restart: unless-stopped

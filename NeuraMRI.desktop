@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=NeuraMRI — Brain Tumor Classifier
+Comment=Launch the local NeuraMRI FastAPI web application
+Exec=bash -lc 'cd "$(dirname "%k")" && ./start_webapp.bash'
+Terminal=true
+Categories=Science;Education;Development;

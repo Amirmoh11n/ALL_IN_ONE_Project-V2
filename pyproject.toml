@@ -1,0 +1,31 @@
+[project]
+name = "brain-tumor-classification"
+version = "1.0.0"
+description = "End-to-end brain tumor MRI classification with EfficientNet-B3, MLflow and validated exports."
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.2",
+    "torchvision>=0.17",
+    "pillow>=10.0",
+    "pyyaml>=6.0",
+    "kagglehub>=0.3",
+    "mlflow>=3.0",
+    "scikit-learn>=1.4",
+    "numpy>=1.26",
+    "onnx>=1.16",
+    "onnxscript>=0.2",
+    "onnxruntime>=1.18",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+brain-tumor = "src.cli:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
