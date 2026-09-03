@@ -28,7 +28,7 @@ class ONNXModelService:
         self.model_path = Path(model_path)
         self.config = ConfigLoader(config_path)
         self.classes = list(self.config.get("data.class_names", ["glioma", "meningioma", "notumor", "pituitary"]))
-        self.image_size = int(self.config.get("export.input_size", self.config.get("data.image_size", 300)))
+        self.image_size = int(self.config.get("export.input_size", self.config.get("data.image_size", 380)))
         self.mean = np.asarray(self.config.get("data.normalization.mean", [0.485, 0.456, 0.406]), dtype=np.float32)
         self.std = np.asarray(self.config.get("data.normalization.std", [0.229, 0.224, 0.225]), dtype=np.float32)
         self.session = None

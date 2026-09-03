@@ -2,7 +2,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
-if [[ ! -f artifacts/exports/brain_tumor_efficientnet_b3.onnx ]]; then
+if [[ ! -f artifacts/exports/brain_tumor_efficientnet_b4.onnx ]]; then
   echo "ONNX model not found. Run: uv run brain-tumor train && uv run brain-tumor export"
   exit 1
 fi

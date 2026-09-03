@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  A production-oriented PyTorch project for classifying brain MRI images into four categories using EfficientNet-B3 transfer learning, MLflow experiment tracking, validated model export, and a FastAPI + ONNX web inference service.
+  A production-oriented PyTorch project for classifying brain MRI images into four categories using EfficientNet-B4 transfer learning, MLflow experiment tracking, validated model export, and a FastAPI + ONNX web inference service.
 </p>
 
 <p align="center">
@@ -53,7 +53,7 @@ Stratified Train / Validation Split
    ↓
 Data Augmentation
    ↓
-EfficientNet-B3 Transfer Learning
+EfficientNet-B4 Transfer Learning
    ↓
 Weighted Cross-Entropy Training
    ↓
@@ -79,7 +79,7 @@ Web Application / Cloud Deployment
 | Component              | Status                                      |
 |------------------------|---------------------------------------------|
 | Data pipeline          | Implemented & tested                        |
-| EfficientNet-B3 model  | Implemented & tested                        |
+| EfficientNet-B4 model  | Implemented & tested                        |
 | Trainer (AMP, ES, LR)  | Implemented & tested                        |
 | Metrics & evaluation   | Implemented & tested                        |
 | Export (TS / Lite / ONNX) | Implemented & tested                     |
@@ -97,7 +97,7 @@ Web Application / Cloud Deployment
 
 ## ✨ Key Features
 
-* 🧠 **EfficientNet-B3** with ImageNet transfer learning
+* 🧠 **EfficientNet-B4** with ImageNet transfer learning
 * 📊 Stratified train/validation splitting
 * ⚖️ Class-weighted `CrossEntropyLoss`
 * 🚀 Adam optimizer
@@ -138,7 +138,7 @@ Web Application / Cloud Deployment
                                     │
                                     ▼
                          ┌─────────────────────┐
-                         │   EfficientNet-B3   │
+                         │   EfficientNet-B4   │
                          │ ImageNet Transfer   │
                          │      Learning       │
                          └──────────┬──────────┘
@@ -215,7 +215,7 @@ Web Application / Cloud Deployment
 ├── src/
 │   ├── cli.py                       # Entry point: train / evaluate / export / predict
 │   ├── data/                        # Acquisition, split, augment, Dataset, DataPipeline
-│   ├── models/                      # EfficientNet-B3 classifier + factory
+│   ├── models/                      # EfficientNet-B4 classifier + factory
 │   ├── engine/                      # Trainer (AMP, early stopping, LR scheduler, MLflow)
 │   ├── metrics/                     # Accuracy, Precision, Recall, F1, ROC-AUC, Confusion Matrix
 │   ├── evaluate/                    # Independent test-set evaluation
@@ -351,7 +351,7 @@ Augmentation
    ↓
 DataLoader
    ↓
-EfficientNet-B3
+EfficientNet-B4
    ↓
 Weighted CrossEntropy
    ↓
@@ -527,7 +527,7 @@ FastAPI
 ONNX Runtime
    │
    ▼
-EfficientNet-B3 ONNX Model
+EfficientNet-B4 ONNX Model
 ```
 
 ### Features
@@ -690,7 +690,7 @@ Or use the project runner:
                      ▼
 ┌──────────────────────────────────────────┐
 │              TRAINING                   │
-│ EfficientNet-B3 + Transfer Learning     │
+│ EfficientNet-B4 + Transfer Learning     │
 └────────────────────┬─────────────────────┘
                      │
                      ▼

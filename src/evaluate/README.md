@@ -12,7 +12,7 @@ and computes the full metric suite from `src/metrics/`.
 
 Typical usage:
 ```python
-model = EfficientNetB3Classifier(num_classes=4, pretrained=False)
+model = build_model(config, pretrained=False)  # EfficientNet-B4 by default
 load_model_checkpoint(model, "artifacts/checkpoints/best_model.pt")
 evaluator = ModelEvaluator(model, test_loader, num_classes=4)
 result = evaluator.evaluate()

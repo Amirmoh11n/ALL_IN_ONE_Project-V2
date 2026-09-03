@@ -59,7 +59,7 @@ class ModelEvaluator:
     """Runs inference over a DataLoader and computes the full metric suite.
 
     Typical usage (against the untouched Testing set):
-        model = EfficientNetB3Classifier(num_classes=4, pretrained=False)
+        model = build_model(config, pretrained=False)  # or EfficientNetClassifier(...)
         load_model_checkpoint(model, "artifacts/checkpoints/best_model.pt")
         evaluator = ModelEvaluator(model, test_loader, num_classes=4)
         result = evaluator.evaluate()

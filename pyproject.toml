@@ -1,7 +1,7 @@
 [project]
 name = "brain-tumor-classification"
-version = "1.0.0"
-description = "End-to-end brain tumor MRI classification with EfficientNet-B3, MLflow and validated exports."
+version = "2.0.0"
+description = "End-to-end brain tumor MRI classification with EfficientNet-B4, MLflow and validated exports."
 requires-python = ">=3.10"
 dependencies = [
     "torch>=2.2",

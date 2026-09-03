@@ -53,7 +53,7 @@ def export_models(config: ConfigLoader, checkpoint: Path):
     device = torch.device("cpu")
     load_model_checkpoint(model, checkpoint, device)
     output_dir = config.resolve_path("export.output_dir", "artifacts/exports")
-    exporter = ModelExporter(model, int(config.get("export.input_size", config.get("data.image_size", 300))))
+    exporter = ModelExporter(model, int(config.get("export.input_size", config.get("data.image_size", 380))))
     paths = exporter.export_all(output_dir, config.get("export.base_name", "brain_tumor"))
     result = {key: str(value) for key, value in paths.items()}
     print(json.dumps(result, indent=2))

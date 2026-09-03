@@ -1,13 +1,13 @@
 # Web Application — Brain Tumor MRI Classifier
 
-Production-oriented web interface for the trained/exported EfficientNet-B3 classifier.
+Production-oriented web interface for the trained/exported EfficientNet-B4 classifier.
 
 ## Stack
 
 - Frontend: semantic HTML, Tailwind CSS, vanilla JavaScript
 - Backend: FastAPI + Uvicorn
 - Inference: ONNX Runtime
-- Model artifact: `artifacts/exports/brain_tumor_efficientnet_b3.onnx`
+- Model artifact: `artifacts/exports/brain_tumor_efficientnet_b4.onnx`
 
 ## Flow
 

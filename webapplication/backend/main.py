@@ -16,8 +16,8 @@ FRONTEND_DIR = ROOT / "webapplication" / "frontend"
 
 app = FastAPI(
     title="NeuraMRI — Brain Tumor MRI Classifier",
-    version="1.1.0",
-    description="Server-side FastAPI inference API for the exported EfficientNet-B3 ONNX model.",
+    version="2.0.0",
+    description="Server-side FastAPI inference API for the exported EfficientNet-B4 ONNX model.",
 )
 
 app.add_middleware(

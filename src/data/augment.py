@@ -6,7 +6,7 @@ are resized + normalized only (no augmentation), so evaluation metrics reflect
 real inference conditions rather than an artificially easier/harder distribution.
 
 Normalization defaults to ImageNet mean/std, matching the ImageNet-pretrained
-EfficientNet-B3 backbone this project uses for transfer learning.
+EfficientNet backbone (B3/B4) this project uses for transfer learning.
 """
 
 from typing import Optional, Sequence
@@ -33,7 +33,7 @@ class AugmentationFactory:
         """Return the augmentation + normalization pipeline used for the training split.
 
         Args:
-            image_size: Target square size (e.g. 300 for EfficientNet-B3).
+            image_size: Target square size (e.g. 380 for EfficientNet-B4, 300 for B3).
             mean: Per-channel normalization mean (defaults to ImageNet stats).
             std: Per-channel normalization std (defaults to ImageNet stats).
             flip_p: Probability of a random horizontal flip.
@@ -61,7 +61,7 @@ class AugmentationFactory:
         """Return the resize + normalization-only pipeline used for validation/test splits.
 
         Args:
-            image_size: Target square size (e.g. 300 for EfficientNet-B3).
+            image_size: Target square size (e.g. 380 for EfficientNet-B4, 300 for B3).
             mean: Per-channel normalization mean (defaults to ImageNet stats).
             std: Per-channel normalization std (defaults to ImageNet stats).
         """

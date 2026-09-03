@@ -48,7 +48,7 @@ class InferencePipeline:
         model = build_model(config, pretrained=False)
         self.model = load_model_checkpoint(model, Path(checkpoint_path), self.device)
 
-        image_size = int(config.get("data.image_size", 300))
+        image_size = int(config.get("data.image_size", 380))
         self.transform = AugmentationFactory.build_eval_transforms(
             image_size, config.get("data.normalization.mean"), config.get("data.normalization.std")
         )

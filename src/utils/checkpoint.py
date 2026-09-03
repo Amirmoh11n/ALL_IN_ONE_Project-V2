@@ -24,7 +24,7 @@ def load_model_checkpoint(
     """Load a checkpoint's model_state_dict into `model`, in-place, and return it.
 
     Args:
-        model: An instantiated model (e.g. EfficientNetB3Classifier) with the
+        model: An instantiated model (e.g. EfficientNetClassifier) with the
             same architecture as the one the checkpoint was saved from.
         checkpoint_path: Path to a .pt file saved by Trainer._save_checkpoint,
             containing at least a "model_state_dict" key.

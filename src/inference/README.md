@@ -4,7 +4,7 @@ The inference pipeline: loads a trained checkpoint and classifies a single MRI
 image. This is what `webapplication/backend` calls when a user uploads an image.
 
 - `inference.py`:
-  - `InferencePipeline` — loads an `EfficientNetB3Classifier` checkpoint once
+  - `InferencePipeline` — loads an `EfficientNetClassifier` checkpoint once
     (via `src/utils/checkpoint.py`), builds the eval-only transform (resize +
     ImageNet normalization, matching training), and exposes `.predict(image)`.
   - `PredictionResult` — dataclass: `predicted_class` (str), `confidence`
