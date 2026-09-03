@@ -76,24 +76,41 @@ Web Application / Cloud Deployment
 
 ## ✅ Status
 
-| Component              | Status                                      |
-|------------------------|---------------------------------------------|
-| Data pipeline          | Implemented & tested                        |
-| EfficientNet-B4 model  | Implemented & tested                        |
-| Trainer (AMP, ES, LR)  | Implemented & tested                        |
-| Metrics & evaluation   | Implemented & tested                        |
-| Export (TS / Lite / ONNX) | Implemented & tested                     |
-| Inference pipeline     | Implemented & tested                        |
-| FastAPI + web UI       | Implemented & tested                        |
-| Unit / integration tests | **85 tests – all passing**                |
+| Component | V2.0 |
+| --- | --- |
+| EfficientNet-B4 (+ B3 fallback) | Done |
+| Config-driven `val_f1_macro` checkpoint | Done |
+| Auto patient-aware / stratified split | Done |
+| Data quality filter | Done |
+| Mixup/CutMix (off by default) | Done |
+| Multi-seed (3) mean ± std | Done |
+| Specificity, PPV/NPV, ECE, temperature | Done |
+| Confusion + ROC plots | Done |
+| Grad-CAM artifacts (not web) | Done |
+| Stable ONNX (legacy exporter, no Lite) | Done |
+| Batch CSV inference | Done |
+| Web i18n EN / FA + disclaimer | Done |
+| Docker serving image | Done |
+| CI lint + unit tests | Done |
+| Model card | `docs/MODEL_CARD.md` |
 
-**Recent fixes (2026-08):**
-- Fixed missing `CLASS_NAMES` import in `src/data/acquisition.py` (now uses `TumorClasses.NAMES`).
-- Updated AMP APIs in `src/engine/trainer.py` to the non-deprecated `torch.amp` forms.
-- Corrected project structure documentation to match the actual layout (`src/*`, `webapplication/`).
-- Full test suite verified green.
+**Not a clinical device.** See the model card.
+
+### Test metrics (fill after `brain-tumor evaluate`)
+
+After evaluation, copy `artifacts/evaluation/metrics_table.md` here.
+
+```text
+uv run brain-tumor train
+uv run brain-tumor evaluate
+uv run brain-tumor export
+uv run brain-tumor explain
+uv run brain-tumor predict --image path/to/slice.jpg
+uv run brain-tumor predict-batch --folder path/to/folder --output artifacts/evaluation/batch.csv
+```
 
 ---
+
 
 ## ✨ Key Features
 

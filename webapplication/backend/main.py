@@ -1,5 +1,5 @@
-from pathlib import Path
 from io import BytesIO
+from pathlib import Path
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,7 +7,14 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image, UnidentifiedImageError
 
-from .config import ALLOWED_EXTENSIONS, CONFIG_PATH, CORS_ORIGINS, MAX_UPLOAD_MB, MODEL_PATH, MODEL_S3_URI
+from .config import (
+    ALLOWED_EXTENSIONS,
+    CONFIG_PATH,
+    CORS_ORIGINS,
+    MAX_UPLOAD_MB,
+    MODEL_PATH,
+    MODEL_S3_URI,
+)
 from .model_service import ONNXModelService
 from .schemas import HealthResponse, PredictionResponse
 
@@ -17,7 +24,7 @@ FRONTEND_DIR = ROOT / "webapplication" / "frontend"
 app = FastAPI(
     title="NeuraMRI — Brain Tumor MRI Classifier",
     version="2.0.0",
-    description="Server-side FastAPI inference API for the exported EfficientNet-B4 ONNX model.",
+    description="FastAPI inference API for the exported EfficientNet-B4 ONNX model (research/education).",
 )
 
 app.add_middleware(
@@ -39,7 +46,9 @@ async def security_headers(request, call_next):
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-    response.headers["Cache-Control"] = "no-store" if request.url.path.startswith("/api/") else "public, max-age=3600"
+    response.headers["Cache-Control"] = (
+        "no-store" if request.url.path.startswith("/api/") else "public, max-age=3600"
+    )
     return response
 
 
@@ -67,6 +76,7 @@ def health():
         model_ready=service.ready,
         model_format="ONNX",
         model_path=service.model_path.name,
+        model_version=service.model_version,
         classes=service.classes,
         provider=service.provider,
         error=service.load_error,
@@ -78,9 +88,11 @@ def model_info():
     return {
         "ready": service.ready,
         "model": service.model_path.name,
+        "model_version": service.model_version,
         "input_size": service.image_size,
         "classes": service.classes,
         "provider": service.provider,
+        "disclaimer": "Research/educational software only. Not a clinical device.",
     }
 
 

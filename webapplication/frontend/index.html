@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Brain Tumor MRI Classification — EfficientNet-B4 inference interface" />
-  <title>All-in-one-MRI — Brain Tumor Classification</title>
+  <title>NeuraMRI — Brain Tumor Classification</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,24 +22,38 @@
     .glass { background: rgba(15,23,42,.70); backdrop-filter: blur(18px); border: 1px solid rgba(148,163,184,.14); }
     .drop-active { border-color: #22d3ee !important; background: rgba(6,182,212,.08); }
     .bar { transition: width .55s ease; }
+    [dir="rtl"] .text-left { text-align: right; }
   </style>
 </head>
 <body class="min-h-screen grid-bg">
   <header class="sticky top-0 z-20 border-b border-white/10 bg-[#070b16]/85 backdrop-blur-xl">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
       <a href="#" class="flex items-center gap-3">
-        <div class="h-11 w-11 overflow-hidden rounded-2xl shadow-glow"><img src="/static/assets/logo.svg" alt="All-in-one-MRI logo" class="h-full w-full" /></div>
-        <div><div class="font-semibold tracking-tight">All-in-one-MRI</div><div class="text-xs text-slate-400">Brain Tumor Classification</div></div>
+        <div class="h-11 w-11 overflow-hidden rounded-2xl shadow-glow"><img src="/static/assets/logo.svg" alt="NeuraMRI logo" class="h-full w-full" /></div>
+        <div>
+          <div class="font-semibold tracking-tight" data-i18n="brand">NeuraMRI</div>
+          <div class="text-xs text-slate-400" data-i18n="tagline">Brain Tumor Classification</div>
+        </div>
       </a>
-      <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300"><span id="statusDot" class="h-2 w-2 rounded-full bg-amber-400"></span><span id="statusText">Checking model...</span></div>
+      <div class="flex items-center gap-2">
+        <button id="langEn" type="button" class="rounded-full border border-white/10 px-3 py-1.5 text-xs">EN</button>
+        <button id="langFa" type="button" class="rounded-full border border-white/10 px-3 py-1.5 text-xs">فا</button>
+        <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300">
+          <span id="statusDot" class="h-2 w-2 rounded-full bg-amber-400"></span>
+          <span id="statusText">Checking model...</span>
+        </div>
+      </div>
     </div>
   </header>
 
   <main class="mx-auto max-w-7xl px-5 py-10 lg:px-8">
     <section class="mb-10 max-w-3xl">
-      <div class="mb-4 inline-flex rounded-full border border-violet-400/20 bg-violet-400/10 px-3 py-1 text-xs font-medium text-violet-200">EfficientNet-B4 · ONNX Runtime</div>
-      <h1 class="text-4xl font-bold leading-tight tracking-tight sm:text-6xl">MRI analysis, <span class="bg-gradient-to-r from-violet-300 to-cyan-300 bg-clip-text text-transparent">beautifully simple.</span></h1>
-      <p class="mt-5 text-base leading-7 text-slate-400 sm:text-lg">Upload a brain MRI image and run the exported research model directly through a FastAPI inference service.</p>
+      <div class="mb-4 inline-flex rounded-full border border-violet-400/20 bg-violet-400/10 px-3 py-1 text-xs font-medium text-violet-200" data-i18n="badge">EfficientNet-B4 · ONNX · v2.0.0</div>
+      <h1 class="text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
+        <span data-i18n="title">MRI analysis,</span>
+        <span class="bg-gradient-to-r from-violet-300 to-cyan-300 bg-clip-text text-transparent" data-i18n="titleAccent">beautifully simple.</span>
+      </h1>
+      <p class="mt-5 text-base leading-7 text-slate-400 sm:text-lg" data-i18n="subtitle">Upload a brain MRI and receive a 4-class research prediction with probabilities.</p>
     </section>
 
     <section class="grid gap-6 lg:grid-cols-[1.15fr_.85fr]">
@@ -47,37 +61,79 @@
         <div id="dropzone" class="group flex min-h-[430px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-700 px-6 text-center transition hover:border-violet-400/60 hover:bg-white/[.02]">
           <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,image/bmp" class="hidden" />
           <div id="emptyState">
-            <div class="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-violet-500/20 to-cyan-400/20 text-cyan-300"><svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 16V4m0 0-4 4m4-4 4 4"/><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg></div>
-            <h2 class="text-xl font-semibold">Drop your MRI here</h2><p class="mt-2 text-sm text-slate-400">or click to browse · PNG, JPG, WEBP, BMP · max 10 MB</p>
-            <button type="button" class="mt-6 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-200">Choose image</button>
+            <div class="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-violet-500/20 to-cyan-400/20 text-cyan-300">
+              <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 16V4m0 0-4 4m4-4 4 4"/><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg>
+            </div>
+            <h2 class="text-xl font-semibold" data-i18n="dropTitle">Drop your MRI here</h2>
+            <p class="mt-2 text-sm text-slate-400" data-i18n="dropHint">or click to browse · PNG, JPG, WEBP, BMP · max 10 MB</p>
+            <button type="button" class="mt-6 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-200" data-i18n="choose">Choose image</button>
           </div>
           <div id="previewState" class="hidden w-full max-w-md">
             <img id="preview" class="mx-auto max-h-72 rounded-2xl object-contain shadow-2xl" alt="MRI preview" />
             <div id="fileName" class="mt-4 truncate text-sm text-slate-300"></div>
-            <button id="analyzeBtn" type="button" class="mt-5 w-full rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 px-5 py-3.5 font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50">Analyze MRI</button>
+            <button id="analyzeBtn" type="button" class="mt-5 w-full rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 px-5 py-3.5 font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50" data-i18n="analyze">Analyze MRI</button>
           </div>
         </div>
         <div id="errorBox" class="mt-4 hidden rounded-xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-200"></div>
       </div>
 
       <aside class="glass rounded-3xl p-5 sm:p-7">
-        <div class="flex items-center justify-between"><h2 class="text-lg font-semibold">Prediction</h2><span id="modelBadge" class="rounded-full bg-white/5 px-2.5 py-1 text-xs text-slate-400">Waiting</span></div>
-        <div id="resultEmpty" class="flex min-h-[430px] flex-col items-center justify-center text-center"><div class="grid h-14 w-14 place-items-center rounded-2xl bg-white/5 text-slate-500">✦</div><p class="mt-4 font-medium text-slate-300">Your result will appear here</p><p class="mt-2 max-w-xs text-sm leading-6 text-slate-500">Upload an MRI image to see the predicted class and confidence distribution.</p></div>
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold" data-i18n="prediction">Prediction</h2>
+          <span id="modelBadge" class="rounded-full bg-white/5 px-2.5 py-1 text-xs text-slate-400" data-i18n="waiting">Waiting</span>
+        </div>
+        <div id="resultEmpty" class="flex min-h-[430px] flex-col items-center justify-center text-center">
+          <div class="grid h-14 w-14 place-items-center rounded-2xl bg-white/5 text-slate-500">✦</div>
+          <p class="mt-4 font-medium text-slate-300" data-i18n="emptyTitle">Your result will appear here</p>
+          <p class="mt-2 max-w-xs text-sm leading-6 text-slate-500" data-i18n="emptyBody">Upload an MRI image to see the predicted class and confidence distribution.</p>
+        </div>
         <div id="resultState" class="hidden">
-          <div class="mt-7 rounded-2xl bg-gradient-to-br from-violet-500/10 to-cyan-400/10 p-5"><div class="text-xs uppercase tracking-widest text-slate-400">Predicted class</div><div id="predictedClass" class="mt-2 text-3xl font-bold capitalize"></div><div class="mt-3 flex items-end justify-between"><span class="text-sm text-slate-400">Confidence</span><span id="confidence" class="text-xl font-semibold text-cyan-300"></span></div><div class="mt-2 h-2 overflow-hidden rounded-full bg-white/10"><div id="confidenceBar" class="bar h-full w-0 rounded-full bg-gradient-to-r from-violet-500 to-cyan-400"></div></div></div>
-          <div class="mt-7"><div class="mb-3 flex items-center justify-between"><h3 class="text-sm font-semibold">Probability distribution</h3><span id="device" class="text-xs text-slate-500"></span></div><div id="probabilities" class="space-y-4"></div></div>
+          <div class="mt-7 rounded-2xl bg-gradient-to-br from-violet-500/10 to-cyan-400/10 p-5">
+            <div class="text-xs uppercase tracking-widest text-slate-400" data-i18n="predicted">Predicted class</div>
+            <div id="predictedClass" class="mt-2 text-3xl font-bold capitalize"></div>
+            <div id="tumorSummary" class="mt-2 text-sm text-cyan-200"></div>
+            <div class="mt-3 flex items-end justify-between">
+              <span class="text-sm text-slate-400" data-i18n="confidence">Confidence</span>
+              <span id="confidence" class="text-xl font-semibold text-cyan-300"></span>
+            </div>
+            <div class="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+              <div id="confidenceBar" class="bar h-full w-0 rounded-full bg-gradient-to-r from-violet-500 to-cyan-400"></div>
+            </div>
+          </div>
+          <div class="mt-7">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-sm font-semibold" data-i18n="distribution">Probability distribution</h3>
+              <span id="device" class="text-xs text-slate-500"></span>
+            </div>
+            <div id="probabilities" class="space-y-4"></div>
+          </div>
           <div id="warning" class="mt-7 rounded-xl border border-amber-300/10 bg-amber-300/5 p-3 text-xs leading-5 text-amber-100/70"></div>
         </div>
       </aside>
     </section>
 
     <section class="mt-6 grid gap-4 sm:grid-cols-3">
-      <div class="glass rounded-2xl p-5"><div class="text-xs uppercase tracking-widest text-slate-500">Architecture</div><div class="mt-2 font-semibold">EfficientNet-B4</div><p class="mt-1 text-sm text-slate-500">ImageNet transfer learning</p></div>
-      <div class="glass rounded-2xl p-5"><div class="text-xs uppercase tracking-widest text-slate-500">Deployment</div><div class="mt-2 font-semibold">ONNX Runtime</div><p class="mt-1 text-sm text-slate-500">CPU / CUDA provider support</p></div>
-      <div class="glass rounded-2xl p-5"><div class="text-xs uppercase tracking-widest text-slate-500">Classes</div><div class="mt-2 font-semibold">4 tumor categories</div><p class="mt-1 text-sm text-slate-500">Glioma · Meningioma · No Tumor · Pituitary</p></div>
+      <div class="glass rounded-2xl p-5">
+        <div class="text-xs uppercase tracking-widest text-slate-500" data-i18n="architecture">Architecture</div>
+        <div class="mt-2 font-semibold" data-i18n="architectureValue">EfficientNet-B4</div>
+        <p class="mt-1 text-sm text-slate-500" data-i18n="architectureHint">ImageNet transfer learning</p>
+      </div>
+      <div class="glass rounded-2xl p-5">
+        <div class="text-xs uppercase tracking-widest text-slate-500" data-i18n="deployment">Deployment</div>
+        <div class="mt-2 font-semibold">ONNX Runtime</div>
+        <p class="mt-1 text-sm text-slate-500">CPU / CUDA · model_version in API</p>
+      </div>
+      <div class="glass rounded-2xl p-5">
+        <div class="text-xs uppercase tracking-widest text-slate-500" data-i18n="classes">Classes</div>
+        <div class="mt-2 font-semibold" data-i18n="classesValue">4 tumor categories</div>
+        <p class="mt-1 text-sm text-slate-500" data-i18n="classesHint">Glioma · Meningioma · No Tumor · Pituitary</p>
+      </div>
     </section>
-    <p class="mx-auto mt-8 max-w-3xl text-center text-xs leading-5 text-slate-600">Research/educational software only. This classifier must not be used as a standalone medical diagnosis or clinical decision tool.</p>
+    <p class="mx-auto mt-8 max-w-3xl text-center text-xs leading-5 text-slate-600" data-i18n="disclaimer">
+      Research/educational software only. This classifier must not be used as a standalone medical diagnosis or clinical decision tool.
+    </p>
   </main>
+  <script src="/static/i18n.js"></script>
   <script src="/static/app.js"></script>
 </body>
 </html>

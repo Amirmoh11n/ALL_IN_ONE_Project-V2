@@ -9,6 +9,7 @@ from contextlib import nullcontext
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as TF
@@ -167,6 +168,10 @@ class Trainer:
 
         with self._mlflow_run_context():
             self._log_mlflow_params(epochs)
+            snapshot_dir = self.config.resolve_path(
+                "artifacts.config_snapshot_dir", "artifacts/runs"
+            )
+            self.config.save_snapshot(snapshot_dir / "config.snapshot.yaml")
             for epoch in range(1, epochs + 1):
                 train_loss = self._train_one_epoch()
                 val_loss, y_true, y_pred, y_score = self._validate_one_epoch()
@@ -235,7 +240,14 @@ class Trainer:
             labels = labels.to(self.device, non_blocking=True)
             self.optimizer.zero_grad(set_to_none=True)
             with torch.amp.autocast("cuda", enabled=self.use_amp):
-                loss = self.criterion(self.model(images), labels)
+                mixed, targets_a, targets_b, lam = self._maybe_mix(images, labels)
+                logits = self.model(mixed)
+                if targets_b is None:
+                    loss = self.criterion(logits, targets_a)
+                else:
+                    loss = lam * self.criterion(logits, targets_a) + (1.0 - lam) * self.criterion(
+                        logits, targets_b
+                    )
             if self.use_amp:
                 self.scaler.scale(loss).backward()
                 if self.grad_clip_norm is not None:
@@ -254,6 +266,40 @@ class Trainer:
                 self.optimizer.step()
             running += loss.item() * images.size(0)
         return running / len(self.train_loader.dataset)
+
+    def _maybe_mix(self, images: torch.Tensor, labels: torch.Tensor):
+        mixup_alpha = float(self.config.get("data.augmentation.mixup_alpha", 0.0) or 0.0)
+        cutmix_alpha = float(self.config.get("data.augmentation.cutmix_alpha", 0.0) or 0.0)
+        if mixup_alpha <= 0 and cutmix_alpha <= 0:
+            return images, labels, None, 1.0
+        if cutmix_alpha > 0:
+            return self._cutmix(images, labels, cutmix_alpha)
+        return self._mixup(images, labels, mixup_alpha)
+
+    def _mixup(self, images: torch.Tensor, labels: torch.Tensor, alpha: float):
+        lam = float(np.random.beta(alpha, alpha))
+        index = torch.randperm(images.size(0), device=images.device)
+        mixed = lam * images + (1.0 - lam) * images[index]
+        return mixed, labels, labels[index], lam
+
+    def _cutmix(self, images: torch.Tensor, labels: torch.Tensor, alpha: float):
+        lam = float(np.random.beta(alpha, alpha))
+        batch, _, height, width = images.shape
+        index = torch.randperm(batch, device=images.device)
+        cut_ratio = np.sqrt(1.0 - lam)
+        cut_w = int(width * cut_ratio)
+        cut_h = int(height * cut_ratio)
+        cx = int(np.random.randint(0, width))
+        cy = int(np.random.randint(0, height))
+        x1 = np.clip(cx - cut_w // 2, 0, width)
+        y1 = np.clip(cy - cut_h // 2, 0, height)
+        x2 = np.clip(cx + cut_w // 2, 0, width)
+        y2 = np.clip(cy + cut_h // 2, 0, height)
+        mixed = images.clone()
+        mixed[:, :, y1:y2, x1:x2] = images[index, :, y1:y2, x1:x2]
+        lam = 1.0 - ((x2 - x1) * (y2 - y1) / (width * height))
+        return mixed, labels, labels[index], lam
+
 
     def _validate_one_epoch(
         self,

@@ -9,11 +9,15 @@ data:
     dataset_slug: "masoudnickparvar/brain-tumor-mri-dataset"
   class_names: ["glioma", "meningioma", "notumor", "pituitary"]
   val_split: 0.15
-  # patient_aware when reliable patient IDs can be derived; otherwise stratified_image_level
-  split_strategy: "stratified_image_level"
+  # auto: patient-aware when reliable IDs exist, otherwise stratified_image_level
+  split_strategy: "auto"
   seed: 42
-  # EfficientNet-B4 recommended input resolution
   image_size: 380
+  quality:
+    drop_corrupt: true
+    drop_duplicates: true
+    min_width: 32
+    min_height: 32
   normalization:
     mean: [0.485, 0.456, 0.406]
     std: [0.229, 0.224, 0.225]
@@ -23,18 +27,16 @@ data:
     color_jitter:
       brightness: 0.1
       contrast: 0.1
-    # Mixup / CutMix disabled by default (MRI-appropriate mild setting; enable only after approval)
     mixup_alpha: 0.0
     cutmix_alpha: 0.0
   dataloader:
-    batch_size: 16          # B4 is heavier than B3; reduce if OOM
+    batch_size: 16
     num_workers: 4
     shuffle_train: true
     pin_memory: true
     persistent_workers: true
 
 model:
-  # Primary V2 architecture. Fallback: "efficientnet_b3"
   architecture: "efficientnet_b4"
   pretrained: true
   num_classes: 4
@@ -46,36 +48,52 @@ training:
   weight_decay: 0.00001
   optimizer: "adam"
   use_class_weights: true
-  label_smoothing: 0.0     # optional; enable via config if desired
-  device: "auto"            # auto | cuda | cpu
-  amp: true                 # CUDA mixed precision; automatically disabled on CPU
-  gradient_clip_norm: null  # e.g. 1.0 to enable; null = disabled
+  label_smoothing: 0.0
+  device: "auto"
+  amp: true
+  gradient_clip_norm: null
+  seeds: [42, 43, 44]
   early_stopping:
     patience: 5
     min_delta: 0.0
-    # Config-driven monitor (V2 decision: val_f1_macro). mode is derived automatically.
-    monitor: "val_f1_macro"   # val_f1_macro | val_recall_macro | val_loss | val_accuracy | ...
+    monitor: "val_f1_macro"
   lr_scheduler:
     type: "reduce_on_plateau"
     factor: 0.5
     patience: 2
-    # mode is aligned with the early-stopping monitor (max for F1/recall, min for loss)
 
 evaluation:
   num_classes: 4
+  temperature_scaling: true
+  ece_bins: 15
+  output_dir: "artifacts/evaluation"
 
 export:
   output_dir: "artifacts/exports"
   base_name: "brain_tumor_efficientnet_b4"
   input_size: 380
   model_version: "2.0.0"
+  formats:
+    torchscript: true
+    onnx: true
+    int8: false
   onnx:
     opset_version: 18
+    dynamo: false
+    atol: 0.001
+    rtol: 0.001
 
 artifacts:
   checkpoint_dir: "artifacts/checkpoints"
   checkpoint: "artifacts/checkpoints/best_model.pt"
   evaluation_file: "artifacts/evaluation/test_metrics.json"
+  config_snapshot_dir: "artifacts/runs"
+
+explainability:
+  enabled: true
+  method: "gradcam++"
+  samples_per_class: 3
+  output_dir: "artifacts/explainability"
 
 tracking:
   mlflow:
@@ -86,3 +104,7 @@ tracking:
 
 logging:
   level: "INFO"
+
+web:
+  i18n_default: "en"
+  disclaimer: true

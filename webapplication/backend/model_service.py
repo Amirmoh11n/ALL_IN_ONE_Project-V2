@@ -5,6 +5,7 @@ from typing import Dict
 
 import numpy as np
 from PIL import Image
+
 from src.utils.config_loader import ConfigLoader
 
 
@@ -15,22 +16,32 @@ def _download_s3(uri: str, destination: Path) -> None:
     if len(bucket_key) != 2:
         raise ValueError("MODEL_S3_URI must be s3://bucket/key")
     import boto3
+
     destination.parent.mkdir(parents=True, exist_ok=True)
     boto3.client("s3").download_file(bucket_key[0], bucket_key[1], str(destination))
 
 
 class ONNXModelService:
-    """Server-side ONNX inference. The client never loads the model."""
+    """Server-side ONNX inference. The model is loaded once at process start."""
 
     def __init__(self, model_path: Path, config_path: Path, model_s3_uri: str = ""):
-        if model_s3_uri and not model_path.exists():
-            _download_s3(model_s3_uri, model_path)
+        if model_s3_uri and not Path(model_path).exists():
+            _download_s3(model_s3_uri, Path(model_path))
         self.model_path = Path(model_path)
         self.config = ConfigLoader(config_path)
-        self.classes = list(self.config.get("data.class_names", ["glioma", "meningioma", "notumor", "pituitary"]))
-        self.image_size = int(self.config.get("export.input_size", self.config.get("data.image_size", 380)))
-        self.mean = np.asarray(self.config.get("data.normalization.mean", [0.485, 0.456, 0.406]), dtype=np.float32)
-        self.std = np.asarray(self.config.get("data.normalization.std", [0.229, 0.224, 0.225]), dtype=np.float32)
+        self.classes = list(
+            self.config.get("data.class_names", ["glioma", "meningioma", "notumor", "pituitary"])
+        )
+        self.image_size = int(
+            self.config.get("export.input_size", self.config.get("data.image_size", 380))
+        )
+        self.model_version = str(self.config.get("export.model_version", "2.0.0"))
+        self.mean = np.asarray(
+            self.config.get("data.normalization.mean", [0.485, 0.456, 0.406]), dtype=np.float32
+        )
+        self.std = np.asarray(
+            self.config.get("data.normalization.std", [0.229, 0.224, 0.225]), dtype=np.float32
+        )
         self.session = None
         self.input_name = None
         self.output_name = None
@@ -52,6 +63,7 @@ class ONNXModelService:
             return
         try:
             import onnxruntime as ort
+
             available = ort.get_available_providers()
             preferred = ["CUDAExecutionProvider", "CPUExecutionProvider"]
             providers = [p for p in preferred if p in available] or ["CPUExecutionProvider"]
@@ -85,8 +97,9 @@ class ONNXModelService:
         index = int(np.argmax(probabilities))
         values = {name: float(probabilities[i]) for i, name in enumerate(self.classes)}
         ranked = sorted(values.items(), key=lambda item: item[1], reverse=True)
+        predicted = self.classes[index]
         return {
-            "predicted_class": self.classes[index],
+            "predicted_class": predicted,
             "confidence": float(probabilities[index]),
             "confidence_percentage": float(probabilities[index] * 100.0),
             "probabilities": values,
@@ -95,6 +108,8 @@ class ONNXModelService:
                 for name, value in ranked
             ],
             "model": self.model_path.name,
+            "model_version": self.model_version,
             "device": self.provider,
+            "tumor_present": predicted != "notumor",
             "warning": "Research/educational use only. This is not a medical diagnosis.",
         }

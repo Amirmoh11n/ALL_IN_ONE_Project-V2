@@ -1,4 +1,5 @@
 from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -15,8 +16,10 @@ class PredictionResponse(BaseModel):
     probabilities: Dict[str, float]
     ranked_probabilities: List[Probability]
     model: str
+    model_version: str
     device: str
     warning: Optional[str] = None
+    tumor_present: Optional[bool] = None
 
 
 class HealthResponse(BaseModel):
@@ -24,6 +27,7 @@ class HealthResponse(BaseModel):
     model_ready: bool
     model_format: str
     model_path: str
+    model_version: str
     classes: List[str]
     provider: str
     error: Optional[str] = None
