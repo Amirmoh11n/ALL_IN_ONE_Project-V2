@@ -28,7 +28,8 @@
 
 ## 🌐 Web Application
 
-<img width="1080" height="608" alt="ALL_IN_ONE_PV2" src="https://github.com/user-attachments/assets/767dac82-ff88-4e59-81f8-5690206e8e93" />
+
+
 
 ---
 
