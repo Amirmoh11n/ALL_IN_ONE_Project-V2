@@ -1,7 +1,7 @@
 # 🧠 Brain Tumor MRI Classification
 
 <p align="center">
-  <img width="300" height="300" alt="Brain Tumor MRI Classification Logo" src="https://github.com/user-attachments/assets/b20eea47-9411-461f-ab31-53d984bd9b41"/>
+  <img width="300" height="300" alt="logo" src="https://github.com/user-attachments/assets/b20eea47-9411-461f-ab31-53d984bd9b41" ,alt="Brain Tumor MRI Classification Logo"/>
 </p>
 
 <p align="center">
@@ -25,13 +25,13 @@
 </p>
 
 ---
-## 🌐 Web Application
 
-<img width="1080" height="608" alt="Demo_V22P22" src="https://github.com/user-attachments/assets/1b0cbcb1-f5c3-4a26-9dc3-f03fe7feb8c4" />
+## Web Application 
 
----
+<img width="1080" height="608" alt="All_In_One" src="https://github.com/user-attachments/assets/39a76e3a-3cdb-4cac-8418-44acaa8a19e5" />
 
-# 📌 Overview
+
+## Overview
 
 **Brain Tumor MRI Classification** is an end-to-end deep learning system designed to classify brain MRI images into four categories:
 
@@ -42,7 +42,7 @@
 | `notumor`    | No visible tumor |
 | `pituitary`  | Pituitary tumor  |
 
-The project is designed around the complete machine-learning lifecycle:
+The project focuses not only on model training, but on the complete machine-learning lifecycle:
 
 ```text
 Dataset
@@ -69,105 +69,50 @@ Model Export & Validation
    ↓
 FastAPI + ONNX Inference
    ↓
-Web Application
+Web Application / Cloud Deployment
 ```
 
 ---
 
-# 📊 Training Results
+## ✅ Status
 
-The final training run used **EfficientNet-B4** with transfer learning and monitored `val_f1_macro` for model selection.
+| Component | V2.0 |
+| --- | --- |
+| EfficientNet-B4 (+ B3 fallback) | Done |
+| Config-driven `val_f1_macro` checkpoint | Done |
+| Auto patient-aware / stratified split | Done |
+| Data quality filter | Done |
+| Mixup/CutMix (off by default) | Done |
+| Multi-seed (3) mean ± std | Done |
+| Specificity, PPV/NPV, ECE, temperature | Done |
+| Confusion + ROC plots | Done |
+| Grad-CAM artifacts (not web) | Done |
+| Stable ONNX (legacy exporter, no Lite) | Done |
+| Batch CSV inference | Done |
+| Web i18n EN / FA + disclaimer | Done |
+| Docker serving image | Done |
+| CI lint + unit tests | Done |
+| Model card | `docs/MODEL_CARD.md` |
 
-Training reached **28 epochs**, after which **Early Stopping** was triggered.
+**Not a clinical device.** See the model card.
 
-The best checkpoint was obtained at **Epoch 23**:
+### Test metrics (fill after `brain-tumor evaluate`)
 
-| Metric              | Best Validation Result |
-| ------------------- | ---------------------: |
-| Validation Accuracy |             **98.77%** |
-| Validation Macro F1 |             **98.80%** |
-| Validation Loss     |             **0.0729** |
-| Training Loss       |             **0.0042** |
-| Learning Rate       |              `2.5e-05` |
-| Best Epoch          |            **23 / 30** |
-| Early Stopping      |           **Epoch 28** |
-
-### Best Checkpoint
-
-```text
-artifacts/checkpoints/best_model.pt
-```
-
-The model checkpoint was selected using:
-
-```text
-monitor = val_f1_macro
-best value = 0.9880
-```
-
-Training log:
+After evaluation, copy `artifacts/evaluation/metrics_table.md` here.
 
 ```text
-Epoch 23/30
-train_loss=0.0042
-val_loss=0.0729
-val_acc=0.9877
-val_f1=0.9880
-monitor(val_f1_macro)=0.9880
-lr=2.5e-05
-
-Saved best checkpoint ->
-artifacts/checkpoints/best_model.pt
-```
-
-> **Important:** The 98.80% Macro F1 and 98.77% Accuracy above are **validation metrics**. Final test-set metrics are reported separately after running `brain-tumor evaluate`.
-
----
-
-# 📈 Final Test Evaluation
-
-The final evaluation is performed against the **untouched Testing split**:
-
-```bash
+uv run brain-tumor train
 uv run brain-tumor evaluate
+uv run brain-tumor export
+uv run brain-tumor explain
+uv run brain-tumor predict --image path/to/slice.jpg
+uv run brain-tumor predict-batch --folder path/to/folder --output artifacts/evaluation/batch.csv
 ```
-
-Results are stored in:
-
-```text
-artifacts/evaluation/test_metrics.json
-```
-
-### Test Results
-
-> Run the evaluation command and replace the values below with the actual test metrics.
-
-```text
-Accuracy:        XX.XX%
-Macro Precision: XX.XX%
-Macro Recall:    XX.XX%
-Macro F1:        XX.XX%
-ROC-AUC (OvR):   XX.XX%
-```
-
-The evaluation report includes:
-
-* Accuracy
-* Macro Precision
-* Macro Recall / Sensitivity
-* Macro F1
-* Macro ROC-AUC (OvR)
-* Per-class Precision
-* Per-class Recall
-* Per-class F1
-* Confusion Matrix
-* Specificity
-* PPV / NPV
-* ECE / calibration metrics
 
 ---
 
-# ✨ Key Features
+
+## ✨ Key Features
 
 * 🧠 **EfficientNet-B4** with ImageNet transfer learning
 * 📊 Stratified train/validation splitting
@@ -180,18 +125,14 @@ The evaluation report includes:
 * 📦 Multiple deployment-oriented model exports
 * 🔄 ONNX Runtime inference validation
 * 🖼️ Single-image prediction CLI
-* 📂 Batch inference with CSV output
 * 🌐 FastAPI inference backend
 * 💻 Browser-based web interface
 * 🐳 Docker support
-* ☁️ AWS deployment architecture
+* ☁️ AWS ECS / Fargate deployment support(Not implement)
 * 🔐 Optional private S3 model loading
 * 🧪 Automated test suite
 * ⚙️ Centralized YAML configuration
 * 🧰 `uv`-based dependency management
-* 🔥 AMP / mixed-precision training
-* 🎯 Config-driven checkpoint selection
-* 🧪 Model explainability with Grad-CAM
 
 ---
 
@@ -268,10 +209,10 @@ The evaluation report includes:
 ```text
 .
 ├── configs/
-│   └── config.yaml
+│   └── config.yaml                  # Single source of truth for all hyperparameters
 │
 ├── data/
-│   └── raw/
+│   └── raw/                         # Dataset (auto-downloaded via kagglehub if missing)
 │       ├── Training/
 │       └── Testing/
 │
@@ -282,31 +223,33 @@ The evaluation report includes:
 │   ├── evaluation/
 │   │   └── test_metrics.json
 │   ├── exports/
-│   │   ├── *_web.pt
-│   │   ├── *_gpu.pt
-│   │   ├── *_mobile.ptl
-│   │   ├── *.onnx
-│   │   └── *_manifest.json
-│   └── mlruns/
+│   │   ├── *_web.pt                 # TorchScript (web)
+│   │   ├── *_gpu.pt                 # Frozen TorchScript
+│   │   ├── *_mobile.ptl             # PyTorch Lite
+│   │   └── *.onnx                   # ONNX
+│   └── mlruns/                      # MLflow tracking
 │
 ├── src/
-│   ├── cli.py
-│   ├── data/
-│   ├── models/
-│   ├── engine/
-│   ├── metrics/
-│   ├── evaluate/
-│   ├── export/
-│   ├── inference/
-│   └── utils/
+│   ├── cli.py                       # Entry point: train / evaluate / export / predict
+│   ├── data/                        # Acquisition, split, augment, Dataset, DataPipeline
+│   ├── models/                      # EfficientNet-B4 classifier + factory
+│   ├── engine/                      # Trainer (AMP, early stopping, LR scheduler, MLflow)
+│   ├── metrics/                     # Accuracy, Precision, Recall, F1, ROC-AUC, Confusion Matrix
+│   ├── evaluate/                    # Independent test-set evaluation
+│   ├── export/                      # TorchScript / Lite / ONNX exporters with validation
+│   ├── inference/                   # Single-image InferencePipeline
+│   └── utils/                       # ConfigLoader, checkpoint, logging
 │
-├── tests/
+├── tests/                           # Full unit + integration suite (85 tests)
+│   ├── data/  engine/  evaluate/  export/
+│   ├── inference/  metrics/  models/  utils/  web/
+│
 ├── webapplication/
-│   ├── backend/
-│   └── frontend/
+│   ├── backend/                     # FastAPI + ONNX Runtime service
+│   └── frontend/                    # Simple browser UI
 │
-├── docker/
-├── aws/
+├── docker/                          # Dockerfile(s)
+├── aws/                             # Not Implement
 ├── scripts/
 ├── start_webapp.bash
 ├── pyproject.toml
@@ -319,13 +262,13 @@ The evaluation report includes:
 
 # 🚀 Quick Start
 
-This project uses **uv** for environment and dependency management.
+This project uses **[uv](https://docs.astral.sh/uv/)** for environment and dependency management.
 
 ### 1. Clone
 
 ```bash
-git clone https://github.com/Amirmoh11n/ALL_IN_ONE_Project-V2.git
-cd ALL_IN_ONE_Project-V2
+git clone https://github.com/Amirmoh11n/ALL_IN_ONE_Project-V1/
+cd ALL_IN_ONE_Project-V1
 ```
 
 ### 2. Setup
@@ -346,7 +289,9 @@ The setup script:
 
 # 📦 Dataset
 
-Expected dataset structure:
+The pipeline supports automatic dataset acquisition when the expected dataset directories are missing.
+
+Expected structure:
 
 ```text
 data/raw/
@@ -363,7 +308,24 @@ data/raw/
     └── pituitary/
 ```
 
-The project supports automatic dataset acquisition through `kagglehub` when the expected dataset is unavailable locally.
+If the dataset already exists under `data/raw/`, Kaggle authentication is not required.
+
+### Kaggle Authentication
+
+Using `kaggle.json`:
+
+```bash
+mkdir -p ~/.kaggle
+cp /path/to/kaggle.json ~/.kaggle/kaggle.json
+chmod 600 ~/.kaggle/kaggle.json
+```
+
+Or environment variables:
+
+```bash
+export KAGGLE_USERNAME="your_username"
+export KAGGLE_KEY="your_key"
+```
 
 ---
 
@@ -375,34 +337,21 @@ Run the complete test suite:
 uv run pytest tests -v
 ```
 
-The project contains **85 tests** covering:
+The suite currently contains **85 tests** covering data pipeline, model, trainer (including AMP / early-stopping / class weights / MLflow), metrics, evaluation, export (TorchScript, Lite, ONNX with validation), inference, and the FastAPI backend.
 
-* Data pipeline
-* Model
-* Training
-* AMP
-* Early stopping
-* Class weighting
-* MLflow
-* Metrics
-* Evaluation
-* Export
-* ONNX validation
-* Inference
-* FastAPI backend
-* Web functionality
+All tests pass on the current codebase.
 
 ---
 
 # 🎯 Training
 
-Run the training pipeline:
+Run the complete training pipeline:
 
 ```bash
 uv run brain-tumor train
 ```
 
-For a smoke test:
+For a quick smoke test:
 
 ```bash
 uv run brain-tumor train --epochs 2
@@ -434,7 +383,7 @@ Early Stopping
 Best Checkpoint
 ```
 
-Output:
+Outputs:
 
 ```text
 artifacts/checkpoints/
@@ -446,13 +395,7 @@ artifacts/checkpoints/
 
 # 📊 MLflow Experiment Tracking
 
-MLflow is used to track:
-
-* Experiments
-* Hyperparameters
-* Training metrics
-* Validation metrics
-* Model artifacts
+MLflow is used to track experiments, parameters, metrics, and model-related artifacts.
 
 Start the local MLflow server:
 
@@ -460,7 +403,9 @@ Start the local MLflow server:
 ./scripts/run.bash mlflow
 ```
 
-Configuration:
+Then open the URL printed by MLflow.
+
+Experiment configuration is available in:
 
 ```text
 configs/config.yaml
@@ -468,23 +413,12 @@ configs/config.yaml
 
 ---
 
-# 🔬 Evaluation
+# 🔬 Final Evaluation
 
-Run:
+The final evaluation is performed against the **untouched Testing split**:
 
 ```bash
 uv run brain-tumor evaluate
-```
-
-The evaluation uses the untouched Testing split:
-
-```text
-Training
-   ├── Train
-   └── Validation
-
-Testing
-   └── Final Evaluation
 ```
 
 Results:
@@ -493,40 +427,81 @@ Results:
 artifacts/evaluation/test_metrics.json
 ```
 
+### Metrics
+
+The evaluation report includes:
+
+* Accuracy
+* Macro Precision
+* Macro Recall / Sensitivity
+* Macro F1
+* Macro ROC-AUC (OvR)
+* Per-class Precision
+* Per-class Recall
+* Per-class F1
+* Confusion Matrix
+
+### Results
+
+> Add the final test results here after the final training run.
+
+Example:
+
+```text
+Accuracy:        XX.XX%
+Macro Precision: XX.XX%
+Macro Recall:    XX.XX%
+Macro F1:        XX.XX%
+ROC-AUC (OvR):   XX.XX%
+```
+
+A confusion matrix can also be added here:
+
+```text
+                Predicted
+              G   M   N   P
+Actual   G    ·   ·   ·   ·
+         M    ·   ·   ·   ·
+         N    ·   ·   ·   ·
+         P    ·   ·   ·   ·
+```
+
 ---
 
 # 📦 Model Export
 
-After training:
+After successful training:
 
 ```bash
 uv run brain-tumor export
 ```
 
-Generated artifacts include:
+The exporter generates:
 
-| Artifact          | Purpose                  |
-| ----------------- | ------------------------ |
-| `*_web.pt`        | TorchScript inference    |
-| `*_gpu.pt`        | GPU-oriented TorchScript |
-| `*_mobile.ptl`    | Mobile deployment        |
-| `*.onnx`          | Cross-platform inference |
-| `*_manifest.json` | Export metadata          |
+| Artifact          | Purpose                          |
+| ----------------- | -------------------------------- |
+| `*_web.pt`        | TorchScript inference            |
+| `*_gpu.pt`        | GPU-oriented TorchScript         |
+| `*_mobile.ptl`    | PyTorch Lite / mobile deployment |
+| `*.onnx`          | Cross-platform inference         |
+| `*_manifest.json` | Export metadata                  |
 
 ### ONNX Validation
 
-The ONNX model is validated using:
+The ONNX artifact is automatically validated using:
 
 * `onnx.checker`
 * ONNX Runtime inference
 * PyTorch vs ONNX output comparison
 * Dynamic batch-size testing
 
-This verifies that the exported model is executable and numerically consistent with the original PyTorch model.
+This helps ensure that the exported model is not only generated successfully, but is also executable and numerically consistent with the original model.
 
 ---
 
 # 🖼️ Single-Image Inference
+
+Run inference on a single MRI:
 
 ```bash
 uv run brain-tumor predict \
@@ -550,25 +525,11 @@ Example:
 
 ---
 
-# 📂 Batch Inference
-
-Run inference over a complete folder:
-
-```bash
-uv run brain-tumor predict-batch \
-  --folder path/to/folder \
-  --output artifacts/evaluation/batch.csv
-```
-
-The resulting CSV can be used for further analysis and error inspection.
-
----
-
 # 🌐 Web Application
 
-The project includes a FastAPI + ONNX Runtime inference service.
+The project includes a deployment-oriented web inference application.
 
-### Technology Stack
+### Stack
 
 ```text
 Browser
@@ -583,32 +544,33 @@ FastAPI
 ONNX Runtime
    │
    ▼
-EfficientNet-B4 ONNX
+EfficientNet-B4 ONNX Model
 ```
 
 ### Features
 
 * MRI image upload
-* JPG / JPEG / PNG / WEBP / BMP support
-* Upload-size limitation
-* Server-side inference
-* ONNX Runtime
+* PNG / JPG / JPEG / WEBP / BMP support
+* 10 MB default upload limit
+* Server-side model execution
+* ONNX Runtime inference
 * Health endpoint
 * Readiness endpoint
 * Docker support
+* Cloud deployment support
 * Optional private S3 model loading
-* EN / FA interface
-* Medical disclaimer
 
 The ONNX model is **never sent to the browser**.
 
 ### Start locally
 
+After training and exporting:
+
 ```bash
 ./start_webapp.bash
 ```
 
-Then open:
+The application will be available at:
 
 ```text
 http://127.0.0.1:8000
@@ -618,7 +580,9 @@ http://127.0.0.1:8000
 
 # ☁️ Cloud Deployment
 
-The architecture is prepared for containerized deployment on AWS:
+The web inference service is designed to support containerized deployment on AWS.
+
+Supported deployment architecture:
 
 ```text
                     ┌───────────────┐
@@ -648,13 +612,23 @@ The architecture is prepared for containerized deployment on AWS:
                     └───────────────┘
 ```
 
-> AWS deployment is currently **not implemented**.
+For AWS deployment instructions:
+
+```text
+aws/README.md
+```
+
+The application can optionally load the model from a private S3 location using:
+
+```text
+MODEL_S3_URI
+```
 
 ---
 
 # ⚙️ Configuration
 
-All major experiment and runtime settings are centralized in:
+Experiment and runtime settings are centralized in:
 
 ```text
 configs/config.yaml
@@ -673,7 +647,7 @@ tracking:
 logging:
 ```
 
-This improves:
+Training hyperparameters are intentionally kept outside the source code to improve:
 
 * Reproducibility
 * Experiment management
@@ -683,6 +657,8 @@ This improves:
 ---
 
 # 🛠️ CLI
+
+The main CLI commands are:
 
 ```bash
 # Train
@@ -694,22 +670,14 @@ uv run brain-tumor evaluate
 # Export
 uv run brain-tumor export
 
-# Explainability
-uv run brain-tumor explain
-
-# Single prediction
+# Predict
 uv run brain-tumor predict --image /path/to/image.jpg
-
-# Batch prediction
-uv run brain-tumor predict-batch \
-  --folder /path/to/folder \
-  --output artifacts/evaluation/batch.csv
 
 # Tests
 uv run pytest tests -v
 ```
 
-Project runner:
+Or use the project runner:
 
 ```bash
 ./scripts/run.bash train
@@ -738,7 +706,7 @@ Project runner:
                      │
                      ▼
 ┌──────────────────────────────────────────┐
-│              TRAINING                    │
+│              TRAINING                   │
 │ EfficientNet-B4 + Transfer Learning     │
 └────────────────────┬─────────────────────┘
                      │
@@ -751,7 +719,7 @@ Project runner:
                      ▼
 ┌──────────────────────────────────────────┐
 │              EVALUATION                  │
-│        Untouched Testing Dataset         │
+│      Untouched Testing Dataset           │
 └────────────────────┬─────────────────────┘
                      │
                      ▼
@@ -773,11 +741,9 @@ Project runner:
 
 This project is intended for **machine-learning engineering, experimentation, and research purposes**.
 
-It is **not a medical diagnostic system**.
+It is **not a medical diagnostic system** and model predictions must not be interpreted as a clinical diagnosis or used as a substitute for qualified medical professionals.
 
-Model predictions must not be interpreted as a clinical diagnosis or used as a substitute for qualified medical professionals.
-
-The final test set is kept separate from training and validation. However, the available dataset does not provide patient-level identifiers. Therefore, the validation strategy is based on **image-level stratification rather than patient-level splitting**.
+The final test set is kept separate from training and validation. However, the available dataset does not provide patient-level identifiers; therefore, the validation strategy is based on **image-level stratification rather than patient-level splitting**.
 
 This limitation should be considered when interpreting model performance and generalization.
 
@@ -788,10 +754,10 @@ This limitation should be considered when interpreting model performance and gen
 For production deployment:
 
 * Do not commit Kaggle credentials.
-* Do not commit cloud credentials.
+* Do not commit private cloud credentials.
 * Keep production models in controlled storage.
 * Prefer private S3 buckets for cloud-hosted models.
-* Configure upload-size limits.
+* Configure upload-size limits appropriately.
 * Expose only required API endpoints.
 * Use HTTPS in production.
 * Keep dependencies updated.
@@ -801,24 +767,18 @@ For production deployment:
 
 # 📌 Roadmap
 
-* [x] EfficientNet-B4 training pipeline
-* [x] Validation and early stopping
-* [x] MLflow experiment tracking
-* [x] Comprehensive evaluation
-* [x] ONNX export and validation
-* [x] FastAPI inference service
-* [x] Web application
-* [x] Docker support
-* [x] Grad-CAM explainability
-* [x] Batch inference
-* [ ] AWS production deployment
-* [ ] Automated model versioning
-* [ ] CI/CD pipeline
-* [ ] API authentication
-* [ ] Production monitoring
-* [ ] Inference latency benchmarking
-* [ ] Model performance dashboard
-* [ ] Patient-level evaluation when appropriate metadata becomes available
+Potential future improvements:
+
+* [ ] Add Grad-CAM / explainability
+* [ ] Add calibration analysis
+* [ ] Add automated model versioning
+* [ ] Add CI/CD pipeline
+* [ ] Add Docker Compose development environment
+* [ ] Add API authentication
+* [ ] Add production monitoring
+* [ ] Add inference latency benchmarking
+* [ ] Add model performance dashboard
+* [ ] Add patient-level evaluation when appropriate metadata becomes available
 
 ---
 

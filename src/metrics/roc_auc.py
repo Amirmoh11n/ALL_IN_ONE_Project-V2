@@ -15,9 +15,12 @@ class ROCAUCMetric:
         scores = np.asarray(y_score, dtype=float)
         labels = list(range(num_classes)) if num_classes is not None else None
         try:
-            return float(roc_auc_score(
+            score = float(roc_auc_score(
                 y_true, scores, multi_class="ovr", average=average, labels=labels
             ))
+            if np.isnan(score):
+                return 0.0
+            return score
         except ValueError:
             # ROC-AUC is undefined when a validation/evaluation split contains
             # only one class. Returning 0 keeps training/evaluation pipelines alive;

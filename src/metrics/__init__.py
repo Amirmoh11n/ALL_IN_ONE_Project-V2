@@ -1,7 +1,6 @@
-"""Metrics package: confusion matrix, recall, F1, precision, ROC-AUC, accuracy, specificity, PPV/NPV, ECE."""
+"""Metrics package. Calibration/torch helpers are imported from their modules."""
 
 from src.metrics.accuracy import AccuracyMetric
-from src.metrics.calibration import ECEMetric, TemperatureScaler
 from src.metrics.confusion_matrix import ConfusionMatrixMetric
 from src.metrics.f1_score import F1ScoreMetric
 from src.metrics.ppv_npv import PredictiveValueMetric
@@ -19,6 +18,4 @@ __all__ = [
     "ROCAUCMetric",
     "SpecificityMetric",
     "PredictiveValueMetric",
-    "ECEMetric",
-    "TemperatureScaler",
 ]

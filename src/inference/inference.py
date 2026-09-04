@@ -96,9 +96,19 @@ class InferencePipeline:
             p for p in folder.rglob("*") if p.is_file() and p.suffix.lower() in _IMAGE_SUFFIXES
         )
         results = [self.predict(path) for path in images]
+        self.write_csv(results, output_csv, self.class_names)
+        logger.info("Wrote %d predictions to %s", len(results), output_csv)
+        return results
+
+    @staticmethod
+    def write_csv(
+        results: List[PredictionResult],
+        output_csv: Path,
+        class_names: List[str],
+    ) -> Path:
         output_csv = Path(output_csv)
         output_csv.parent.mkdir(parents=True, exist_ok=True)
-        fieldnames = ["path", "predicted_class", "confidence", "model_version", *self.class_names]
+        fieldnames = ["path", "predicted_class", "confidence", "model_version", *class_names]
         with output_csv.open("w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=fieldnames)
             writer.writeheader()
@@ -111,8 +121,7 @@ class InferencePipeline:
                 }
                 row.update({name: f"{value:.6f}" for name, value in result.probabilities.items()})
                 writer.writerow(row)
-        logger.info("Wrote %d predictions to %s", len(results), output_csv)
-        return results
+        return output_csv
 
     @staticmethod
     def _to_pil_image(image: Union[str, Path, Image.Image]) -> Image.Image:

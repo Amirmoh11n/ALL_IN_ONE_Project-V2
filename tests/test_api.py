@@ -2,6 +2,11 @@
 
 from io import BytesIO
 
+import pytest
+
+pytest.importorskip("fastapi")
+pytest.importorskip("PIL")
+
 from fastapi.testclient import TestClient
 from PIL import Image
 
@@ -24,6 +29,22 @@ def test_live_health():
     response = client.get("/api/health/live")
     assert response.status_code == 200
     assert response.json()["status"] == "alive"
+
+
+def test_model_info_has_disclaimer():
+    response = client.get("/api/model-info")
+    assert response.status_code == 200
+    body = response.json()
+    assert "disclaimer" in body
+    assert body["model_version"]
+
+
+def test_predict_rejects_unsupported_type():
+    response = client.post(
+        "/api/predict",
+        files={"file": ("notes.txt", b"hello", "text/plain")},
+    )
+    assert response.status_code == 415
 
 
 def test_predict_without_model_is_service_unavailable_or_ok():
