@@ -763,23 +763,6 @@ For production deployment:
 
 ---
 
-# 📌 Roadmap
-
-Potential future improvements:
-
-* [ ] Add Grad-CAM / explainability
-* [ ] Add calibration analysis
-* [ ] Add automated model versioning
-* [ ] Add CI/CD pipeline
-* [ ] Add Docker Compose development environment
-* [ ] Add API authentication
-* [ ] Add production monitoring
-* [ ] Add inference latency benchmarking
-* [ ] Add model performance dashboard
-* [ ] Add patient-level evaluation when appropriate metadata becomes available
-
----
-
 # 📜 License
 
 This project is licensed under the **Apache License 2.0**.
