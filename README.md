@@ -25,12 +25,10 @@
 </p>
 
 ---
-
 ## Web Application 
+<img width="1080" height="608" alt="Demo_V22P22" src="https://github.com/user-attachments/assets/ee4e6c2c-674a-44c4-8560-b568d996f012" />
 
-<img width="1080" height="608" alt="All_In_One" src="https://github.com/user-attachments/assets/39a76e3a-3cdb-4cac-8418-44acaa8a19e5" />
-
-
+---
 ## Overview
 
 **Brain Tumor MRI Classification** is an end-to-end deep learning system designed to classify brain MRI images into four categories:
@@ -267,8 +265,8 @@ This project uses **[uv](https://docs.astral.sh/uv/)** for environment and depen
 ### 1. Clone
 
 ```bash
-git clone https://github.com/Amirmoh11n/ALL_IN_ONE_Project-V1/
-cd ALL_IN_ONE_Project-V1
+git clone https://github.com/Amirmoh11n/ALL_IN_ONE_Project-V2/
+cd ALL_IN_ONE_Project-V2
 ```
 
 ### 2. Setup
