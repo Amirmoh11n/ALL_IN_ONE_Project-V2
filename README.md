@@ -25,7 +25,6 @@
 </p>
 
 ---
-
 ## 🌐 Web Application
 
 <img width="1080" height="608" alt="Demo_V22P22" src="https://github.com/user-attachments/assets/1b0cbcb1-f5c3-4a26-9dc3-f03fe7feb8c4" />
