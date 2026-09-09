@@ -258,6 +258,11 @@ uv run brain-tumor predict-batch --folder path/to/folder --output artifacts/eval
 
 ---
 
+### Tips
+The GitHub Actions CI file is incomplete!
+
+---
+
 # 🚀 Quick Start
 
 This project uses **[uv](https://docs.astral.sh/uv/)** for environment and dependency management.
